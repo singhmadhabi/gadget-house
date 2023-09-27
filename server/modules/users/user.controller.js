@@ -4,8 +4,73 @@ const Model = require("./user.model");
 const create = (payload) => {
   return Model.create(payload);
 };
-const list = () => {
-  return Model.find();
+
+const list = async (page = 1, limit = 10, search) => {
+  // return Model.find().skip(0).limit(5);
+  const query = [];
+  if (search?.name) {
+    query.push({
+      $match: {
+        name: new RegExp(search?.name, "gi"),
+      },
+    });
+  }
+  if (search?.role) {
+    query.push({
+      $match: {
+        roles: [search?.role],
+      },
+    });
+  }
+  query.push(
+    {
+      $sort: {
+        created_at: -1,
+      },
+    },
+    {
+      $facet: {
+        metadata: [
+          {
+            $count: "total",
+          },
+        ],
+        data: [
+          {
+            $skip: (+page - 1) * +limit,
+          },
+          {
+            $limit: +limit,
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        total: {
+          $arrayElemAt: ["$metadata.total", 0],
+        },
+      },
+    },
+    {
+      $project: {
+        total: 1,
+        data: 1,
+      },
+    },
+    {
+      $project: {
+        "data.password": 0,
+      },
+    }
+  );
+  const result = await Model.aggregate(query);
+  return {
+    data: result[0].data,
+    total: result[0].total || 0,
+    page: +page,
+    limit: +limit,
+  };
 };
 
 const getById = (id) => {

@@ -18,6 +18,7 @@ const userSchema = new Schema({
     required: true,
     select: false,
   },
+  image: { type: String },
   roles: { type: Array, required: true, default: ["user"] },
   isActive: { type: Boolean, default: true },
   ...commonSchema,

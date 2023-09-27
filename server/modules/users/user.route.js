@@ -1,9 +1,22 @@
+const multer = require("multer");
 const router = require("express").Router();
 const secureAPI = require("../../utils/secure");
 const Controller = require("./user.controller");
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/users");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "." + file.originalname.split(".")[1]);
+  },
+});
+const upload = multer({ storage: storage });
+
 router.get("/", secureAPI(["admin"]), async (req, res, next) => {
   try {
+    const { page, limit, name, role } = req.query;
+    const search = { name, role };
     const result = await Controller.list();
     res.json({ data: result, msg: "success" });
   } catch (e) {
@@ -20,22 +33,24 @@ router.get("/profile", secureAPI(["user"]), async (req, res, next) => {
   }
 });
 
-router.put("/profile", secureAPI(["admin", "user"]), async (req, res, next) => {
-  try {
-    if (req.currentRole.includes("admin")) {
-      const { id, ...rest } = req.body;
-      rest.created_by = req.currentUser;
-      rest.updated_by = req.currentUser;
-      const result = await Controller.updateProfile(id, rest);
+router.put(
+  "/profile",
+  secureAPI(["admin", "user"]),
+  upload.single("image"),
+  async (req, res, next) => {
+    try {
+      if (req?.file) req.body.image = "users".concat("/", req.file.filename);
+      const me = req.currentRole.includes("admin")
+        ? req.body.id
+        : req.currentUser;
+      if (!me) throw new Error("Id is missing");
+      const result = await Controller.updateProfile(me, req.body);
       res.json({ data: result, msg: "success" });
-    } else {
-      const result = await Controller.updateProfile(req.currentUser, req.body);
-      res.json({ data: result, msg: "success" });
+    } catch (e) {
+      next(e);
     }
-  } catch (e) {
-    next(e);
   }
-});
+);
 
 router.put("/change-password", secureAPI(["user"]), async (req, res, next) => {
   try {

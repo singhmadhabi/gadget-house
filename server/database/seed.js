@@ -15,6 +15,7 @@ var setup = {
       password: await bcrypt.hash("password", +process.env.SALT_ROUNDS),
       roles: ["admin"],
       isActive: true,
+      isArchived: false,
       isEmailVerified: true,
     };
     await userController.create(payload);
@@ -26,6 +27,7 @@ var setup = {
       email: "singhmadhabi4@gmail.com",
       password: await bcrypt.hash("password", +process.env.SALT_ROUNDS),
       isActive: true,
+      isArchived: false,
       isEmailVerified: true,
     };
     await userController.create(userPayload);
