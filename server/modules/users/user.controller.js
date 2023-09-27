@@ -83,7 +83,7 @@ const updateProfile = (id, payload) => {
 
 const changePassword = async (id, payload) => {
   const { oldPassword, newPassword } = payload;
-  const user = await Model.findOne({ _id: id });
+  const user = await Model.findOne({ _id: id }).select("+password");
   if (!user) throw new Error("User not found");
   const isValid = await bcrypt.compare(oldPassword, user.password);
   if (!isValid) throw new Error("Password is invalid");
