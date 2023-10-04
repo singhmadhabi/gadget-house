@@ -1,94 +1,33 @@
 const { Schema, model } = require("mongoose");
+const { ObjectId } = Schema.Types;
+const commonSchema = require("../../utils/commonSchema");
 
 const orderSchema = new Schema({
-  shippingInfo: {
-    address: {
-      type: String,
-      required: true,
-    },
-    city: {
-      type: String,
-      required: true,
-    },
-
-    state: {
-      type: String,
-      required: true,
-    },
-
-    country: {
-      type: String,
-      required: true,
-    },
-    pinCode: {
-      type: Number,
-      required: true,
-    },
-    phoneNo: {
-      type: Number,
-      required: true,
-    },
-  },
-  orderItems: [
+  id: { type: String, required: true, index: { unique: true } },
+  orderDate: { type: Date, required: true, default: Date.now() },
+  total: { type: Number, required: true },
+  products: [
     {
-      name: {
-        type: String,
-        required: true,
-      },
-      price: {
-        type: Number,
-        required: true,
-      },
-      quantity: {
-        type: Number,
-        required: true,
-      },
-      product: {
-        type: mongoose.Schema.ObjectId,
-        ref: "Product",
-        required: true,
-      },
+      quantity: { type: Number, required: true },
+      price: { type: Number, required: true },
+      amount: { type: Number, required: true },
+      product: { type: ObjectId, required: true, ref: "Product" },
     },
   ],
-  user: {
-    type: mongoose.Schema.ObjectId,
-    ref: "User",
+  paymentMethod: {
+    type: String,
     required: true,
+    enum: ["COD", "PAYPAL", "CC"],
+    default: "COD",
   },
-  paymentInfo: {
-    id: {
-      type: String,
-      required: true,
-    },
-    status: {
-      type: String,
-      required: true,
-    },
-  },
-  paidAt: {
-    type: Date,
+  payment: {
+    type: String,
     required: true,
+    default: "COD",
   },
-  itemsPrice: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  shippingPrice: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  totalPrice: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  deliveredAt: Date,
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  address: { type: String },
+  status: { type: String, enum: ["pending", "completed"], default: "pending" },
+  ...commonSchema,
 });
 
 module.exports = model("Order", orderSchema);
