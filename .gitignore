@@ -1,0 +1,9 @@
+#My testing
+playground
+.DS_Store
+/server/public/product/*
+/server/public/users/*
+
+#exception to the rule
+!/server/public/product/.gitkeep
+!/server/public/users/.gitkeep
