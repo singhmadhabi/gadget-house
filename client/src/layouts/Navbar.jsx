@@ -8,7 +8,10 @@ import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 
+import { useSelector } from "react-redux";
+
 function NavBar() {
+  const { quantity } = useSelector((state) => state.cart);
   return (
     <Navbar fixed="top" expand="lg" className="bg-body-tertiary">
       <Container fluid>
@@ -24,21 +27,15 @@ function NavBar() {
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-            <Nav.Link>
-              <Link to={"/products"} className="text-dark text-decoration-none">
+              <Link to={"/products"} className="nav-link text-dark text-decoration-none">
                 Products
               </Link>
-            </Nav.Link>
-            <Nav.Link>
-              <Link to={"/about"} className="text-dark text-decoration-none">
+              <Link to={"/about"} className="nav-link text-dark text-decoration-none">
                 About
               </Link>
-            </Nav.Link>
-            <Nav.Link>
-              <Link to={"/contact"} className="text-dark text-decoration-none">
+              <Link to={"/contact"} className="nav-link text-dark text-decoration-none">
                 Contact
               </Link>
-            </Nav.Link>
           </Nav>
           <Form className="d-flex">
             <Form.Control
@@ -51,17 +48,13 @@ function NavBar() {
           </Form>
           <div className="p-1">
             <Stack gap={1} direction="horizontal">
-              <Link to={"/cart"}>
-                <a className="btn btn-outline-secondary">
+              <Link to={"/cart"} className="btn btn-outline-secondary">
                   <FaShoppingCart />
                   &nbsp;
-                  <Badge bg="primary">0</Badge>
-                </a>
+                  <Badge bg="primary">{quantity}</Badge>
               </Link>
-              <Link to={"/login"}>
-                <a className="btn btn-outline-secondary">
+              <Link to={"/login"} className="btn btn-outline-secondary">
                   <BiLogIn size={24} />
-                </a>
               </Link>
             </Stack>
           </div>

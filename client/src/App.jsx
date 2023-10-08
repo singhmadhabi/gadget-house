@@ -1,4 +1,3 @@
-import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Cart from "./pages/Cart";
 import Contact from "./pages/Contact";
@@ -13,11 +12,11 @@ import Footer from "./layouts/Footer";
 export default function App() {
   return (
     <>
+    <div className="d-flex flex-column h-100">
       <BrowserRouter>
         <NavBar />
-        <div className="d-flex flex-column h-100">
           <main className="flex-shrink-0 vh-100">
-            <div className="container flex-auto m-100">
+            <div className="container">
               <Routes>
                 <Route path="/" element=<Home /> />
                 <Route path="/cart" element=<Cart /> />
@@ -30,8 +29,8 @@ export default function App() {
             </div>
           </main>
           <Footer />
-        </div>
       </BrowserRouter>
+      </div>
     </>
   );
 }
