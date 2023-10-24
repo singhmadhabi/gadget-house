@@ -130,7 +130,7 @@ const Cart = () => {
                 })}
                 <tr>
                   <td colSpan="5">Total Carts</td>
-                  <td>Total Amount</td>
+                  <td>{totalAmount()}</td>
                 </tr>
               </tbody>
             </table>
