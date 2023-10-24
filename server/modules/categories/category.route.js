@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Controller = require("./category.controller");
+const secureAPI = require("../../utils/secure");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -12,8 +13,9 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", secureAPI("admin"), async (req, res, next) => {
   try {
+    req.body.created_by = req.currentUser;
     const result = await Controller.create(req.body);
     res.json({ data: result, msg: "success" });
   } catch (e) {
@@ -30,8 +32,9 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", secureAPI(["admin"]), async (req, res, next) => {
   try {
+    req.body.updated_by = req.currentUser;
     const result = await Controller.updateById(req.params.id, req.body);
     res.json({ data: result, msg: "success" });
   } catch (e) {
@@ -39,7 +42,7 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", secureAPI(["admin"]), async (req, res, next) => {
   try {
     const result = await Controller.remove(req.params.id);
     res.json({ data: result, msg: "success" });

@@ -1,5 +1,4 @@
 const { Schema, model } = require("mongoose");
-
 const commonSchema = require("../../utils/commonSchema");
 
 const CategorySchema = new Schema({

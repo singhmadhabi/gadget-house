@@ -119,4 +119,49 @@ const approve = async (id, payload) => {
   );
 };
 
-module.exports = { approve, create, getById, list, remove, updateById };
+const updateOrderByStripe = async (data, type) => {
+  const { id, status } = data;
+  const existingOrder = await Model.findOne({ stripeId: id });
+  if (!existingOrder) throw new Error("Order not found");
+  if (type === "completed" && status === "complete") {
+    return Model.findOneAndUpdate(
+      { stripeId: id },
+      { status: "completed" },
+      { new: true }
+    );
+  } else {
+    const failedTxn = await Model.findOneAndUpdate(
+      { stripeId: id },
+      { status: "failed" },
+      { new: true }
+    );
+    if (failedTxn) {
+      const products = failedTxn?.products;
+      // check the products in order
+      products.map(async (product) => {
+        const { product: id, quantity } = product;
+        // check if product exist or not
+        const isExistingProduct = await productModel.findOne({ _id: id });
+        if (!isExistingProduct) throw new Error("Product not found");
+        // Update the product quantity with deletedOrder Product Quantity
+        const newQuantity = isExistingProduct?.quantity + quantity;
+        return await productModel.findOneAndUpdate(
+          { _id: id },
+          { quantity: newQuantity },
+          { new: true }
+        );
+      });
+    }
+    return failedTxn;
+  }
+};
+
+module.exports = {
+  approve,
+  create,
+  getById,
+  list,
+  remove,
+  updateById,
+  updateOrderByStripe,
+};

@@ -1,4 +1,6 @@
 const Model = require("./product.model");
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Types;
 
 const create = async (payload) => {
   return Model.create(payload);
@@ -13,6 +15,11 @@ const list = async (limit = 10, page = 1, search) => {
       },
     });
   }
+  query.push({
+    $match: {
+      isArchived: search.isArchived ? true : false,
+    },
+  });
   query.push(
     {
       $sort: {
@@ -48,11 +55,6 @@ const list = async (limit = 10, page = 1, search) => {
         total: 1,
         data: 1,
       },
-    },
-    {
-      $project: {
-        "data.password": 0,
-      },
     }
   );
   const result = await Model.aggregate(query);
@@ -64,16 +66,43 @@ const list = async (limit = 10, page = 1, search) => {
   };
 };
 
-const getById = (id) => {
-  return Model.findOne({ _id: id });
+const getById = async (id) => {
+  const product = await Model.aggregate([
+    {
+      $match: {
+        _id: new ObjectId(id),
+      },
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "category_name",
+      },
+    },
+    {
+      $unwind: {
+        path: "$category_name",
+        preserveNullAndEmptyArrays: false,
+      },
+    },
+    {
+      $addFields: {
+        category_name: "$category_name.name",
+      },
+    },
+  ]);
+  if (product.length === 0) return {};
+  return product[0];
 };
 
 const updateById = (id, payload) => {
   return Model.findOneAndUpdate({ _id: id }, payload, { new: true });
 };
 
-const remove = (id) => {
-  return Model.deleteOne({ _id: id });
+const remove = (id, payload) => {
+  return Model.findOneAndUpdate({ _id: id }, payload, { new: true });
 };
 
 module.exports = { create, list, getById, updateById, remove };

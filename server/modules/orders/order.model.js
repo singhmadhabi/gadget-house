@@ -11,22 +11,24 @@ const orderSchema = new Schema({
       quantity: { type: Number, required: true },
       price: { type: Number, required: true },
       amount: { type: Number, required: true },
-      product: { type: ObjectId, required: true, ref: "Product" },
+      product: { type: ObjectId, ref: "Product", required: true },
     },
   ],
   paymentMethod: {
     type: String,
     required: true,
-    enum: ["COD", "PAYPAL", "CC"],
+    enum: ["COD", "STRIPE"],
     default: "COD",
   },
-  payment: {
-    type: String,
-    required: true,
-    default: "COD",
-  },
+  stripeId: { type: String },
+  name: { type: String, required: true },
+  email: { type: String },
   address: { type: String },
-  status: { type: String, enum: ["pending", "completed"], default: "pending" },
+  status: {
+    type: String,
+    enum: ["pending", "completed", "failed"],
+    default: "pending",
+  },
   ...commonSchema,
 });
 
