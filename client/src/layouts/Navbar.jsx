@@ -27,15 +27,24 @@ function NavBar() {
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-              <Link to={"/products"} className="nav-link text-dark text-decoration-none">
-                Products
-              </Link>
-              <Link to={"/about"} className="nav-link text-dark text-decoration-none">
-                About
-              </Link>
-              <Link to={"/contact"} className="nav-link text-dark text-decoration-none">
-                Contact
-              </Link>
+            <Link
+              to={"/products"}
+              className="nav-link text-dark text-decoration-none"
+            >
+              Products
+            </Link>
+            <Link
+              to={"/about"}
+              className="nav-link text-dark text-decoration-none"
+            >
+              About
+            </Link>
+            <Link
+              to={"/contact"}
+              className="nav-link text-dark text-decoration-none"
+            >
+              Contact
+            </Link>
           </Nav>
           <Form className="d-flex">
             <Form.Control
@@ -49,12 +58,12 @@ function NavBar() {
           <div className="p-1">
             <Stack gap={1} direction="horizontal">
               <Link to={"/cart"} className="btn btn-outline-secondary">
-                  <FaShoppingCart />
-                  &nbsp;
-                  <Badge bg="primary">{quantity}</Badge>
+                <FaShoppingCart />
+                &nbsp;
+                <Badge bg="primary">{quantity}</Badge>
               </Link>
               <Link to={"/login"} className="btn btn-outline-secondary">
-                  <BiLogIn size={24} />
+                <BiLogIn size={24} />
               </Link>
             </Stack>
           </div>
