@@ -2,6 +2,7 @@ import "./ProductDetail.css";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useCallback, useEffect, useState } from "react";
+import { BASE_URL } from "../constants";
 
 import { fetchProducts, getProductById } from "../slices/productSlice";
 import { updateCart } from "../slices/cartSlice";
@@ -20,7 +21,7 @@ const ProductDetail = () => {
   }, [dispatch, id]);
 
   const allProducts = useCallback(() => {
-    dispatch(fetchProducts({ limit: 15, page: 1 }));
+    dispatch(fetchProducts({ limit: 25, page: 1 }));
   }, [dispatch]);
 
   const fourRandomProducts = useCallback(() => {
@@ -55,13 +56,20 @@ const ProductDetail = () => {
           <div className="row m-0">
             <div className="col-lg-4 left-side-product-box pb-3">
               {product?.images && product?.images.length > 0 ? (
-                <img src={product?.images[0]} className="border p-3" />
+                <img
+                  src={BASE_URL.concat("/", product?.images[0])}
+                  className="border p-3"
+                />
               ) : null}
               <span className="sub-img">
                 {product?.images &&
                   product?.images.slice(1).map((image, index) => {
                     return (
-                      <img key={index} src={image} className="border p-2" />
+                      <img
+                        key={index}
+                        src={BASE_URL.concat("/", image)}
+                        className="border p-2"
+                      />
                     );
                   })}
               </span>
@@ -147,7 +155,7 @@ const ProductDetail = () => {
                           <img
                             src={
                               product?.images && product?.images.length > 0
-                                ? product?.images[0]
+                                ? BASE_URL.concat("/", product?.images[0])
                                 : ""
                             }
                           />

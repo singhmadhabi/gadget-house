@@ -23,7 +23,9 @@ import {
   EditCategory,
   ListCategory,
 } from "./pages/admin/categories";
+import { AddOrder, EditOrder, ListOrders } from "./pages/admin/orders";
 import { AddProduct, EditProduct, ListProducts } from "./pages/admin/products";
+import { AddUser, EditUser, ListUsers } from "./pages/admin/users";
 
 export default function App() {
   return (
@@ -95,6 +97,43 @@ export default function App() {
                   <PrivateRoute role="admin">{<EditCategory />}</PrivateRoute>
                 }
               />
+              <Route
+                path="/admin/users"
+                element={
+                  <PrivateRoute role="admin">{<ListUsers />}</PrivateRoute>
+                }
+              />
+              <Route
+                path="/admin/users/add"
+                element={
+                  <PrivateRoute role="admin">{<AddUser />}</PrivateRoute>
+                }
+              />
+              <Route
+                path="/admin/users/:id"
+                element={
+                  <PrivateRoute role="admin">{<EditUser />}</PrivateRoute>
+                }
+              />
+              <Route
+                path="/admin/orders"
+                element={
+                  <PrivateRoute role="admin">{<ListOrders />}</PrivateRoute>
+                }
+              />
+              <Route
+                path="/admin/orders/add"
+                element={
+                  <PrivateRoute role="admin">{<AddOrder />}</PrivateRoute>
+                }
+              />
+              <Route
+                path="/admin/orders/:id"
+                element={
+                  <PrivateRoute role="admin">{<EditOrder />}</PrivateRoute>
+                }
+              />
+              <Route path="/admin/*" element={<Error />} />
             </Route>
           </Routes>
         </BrowserRouter>

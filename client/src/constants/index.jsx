@@ -7,4 +7,5 @@ export const URLS = {
   CATEGORIES: API_VERSION + "/categories",
   ORDERS: API_VERSION + "/orders",
   PRODUCTS: API_VERSION + "/products",
+  USERS: API_VERSION + "/users",
 };

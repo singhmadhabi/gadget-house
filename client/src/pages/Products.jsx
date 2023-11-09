@@ -3,6 +3,7 @@ import { useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
+import { BASE_URL } from "../constants";
 import { addToCart } from "../slices/cartSlice";
 import {
   fetchProducts,
@@ -54,10 +55,7 @@ const Products = () => {
                             <a href="#">
                               <img
                                 className="img-fluid"
-                                src={
-                                  product?.images[0] ||
-                                  "https://www.bootdey.com/image/380x380/FF00FF/000000"
-                                }
+                                src={BASE_URL.concat("/", product?.images[0])}
                                 title={product?.name || ""}
                                 alt={product?.name || ""}
                               />

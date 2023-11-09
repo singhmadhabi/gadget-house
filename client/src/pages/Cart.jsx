@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Image } from "react-bootstrap";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { BsArrowLeftSquare } from "react-icons/bs";
+import { BASE_URL } from "../constants";
 
 import { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -115,7 +116,7 @@ const FullCart = ({
                       <Image
                         width={40}
                         height={40}
-                        src={item?.images[0]}
+                        src={BASE_URL.concat("/", item?.images[0])}
                         thumbnail
                       />
                     </td>
